@@ -33,7 +33,7 @@ jobs:
           S3_CONFIG_BUCKET: ${{ secrets.S3_CONFIG_BUCKET_DEV }}
         run: |
           aws s3 cp s3://$S3_CONFIG_BUCKET/config.json ./src/configs/ --quiet
-          #aws s3 cp s3://$S3_CONFIG_BUCKET/firebase-app-sdk-config.json ./src/configs/ --quiet
+          aws s3 cp s3://$S3_CONFIG_BUCKET/firebase-app-sdk-config.json ./src/configs/ --quiet
 
       - name: Build by Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
