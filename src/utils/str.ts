@@ -63,3 +63,9 @@ export function randStr(length: number): string {
 export function capitalize(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+export function numFormat(num: number | string): string {
+  if (typeof num === 'string') num = parseFloat(num)
+  if (isNaN(num)) return ''
+  return num.toLocaleString()
+}

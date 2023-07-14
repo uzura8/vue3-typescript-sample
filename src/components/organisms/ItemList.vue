@@ -3,10 +3,13 @@ import type { ClickMode, ItemOnCart } from '@/types/Service'
 import { defineComponent, ref, computed, onBeforeMount, onMounted, watch } from 'vue'
 import ItemListItem from '@/components/molecules/ItemListItem.vue'
 import FormSelectField from '@/components/molecules/FormSelectField.vue'
+import { getRandomInt } from '@/utils/number'
+import { numFormat } from '@/utils/str'
 
 type Item = {
   itemId: number
   itemName: string
+  price: number
 }
 
 export default defineComponent({
@@ -16,11 +19,21 @@ export default defineComponent({
   },
 
   setup() {
-    const itemCountPerPage = 20
+    const itemCountPerPage = 40
 
     const items = ref<Item[]>([])
     const itemsOnCart = ref<ItemOnCart[]>([])
     const itemIdsOnCart = computed((): number[] => itemsOnCart.value.map((item) => item.itemId))
+    const totalQuantity = computed((): number =>
+      itemsOnCart.value.reduce((total: number, obj: ItemOnCart) => total + obj.quantity, 0)
+    )
+    const totalAmount = computed((): number =>
+      itemsOnCart.value.reduce((total: number, obj: ItemOnCart) => {
+        const item = items.value.find((item) => item.itemId === obj.itemId)
+        if (!item) return total
+        return total + obj.quantity * item.price
+      }, 0)
+    )
 
     const resetItems = () => {
       itemsOnCart.value = []
@@ -28,6 +41,7 @@ export default defineComponent({
       for (let i = 1; i <= itemCountPerPage; i++) {
         items.value.push({
           itemId: i,
+          price: getRandomInt(100, 1000),
           itemName: `Item ${i} の商品名です Item ${i} の商品名です Item ${i} の商品名です `
         })
       }
@@ -96,6 +110,9 @@ export default defineComponent({
       items,
       itemIdsOnCart,
       itemsOnCart,
+      totalQuantity,
+      totalAmount,
+      numFormat,
       updateCart,
       handleItem
     }
@@ -104,7 +121,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="py-8">
+  <div class="py-4">
     <FormSelectField
       v-model="clickMode"
       label-text="Mode"
@@ -113,11 +130,31 @@ export default defineComponent({
       class="max-w-xl"
     />
   </div>
+  <div class="py-4 mt-2">
+    <button type="button"></button>
+    <button
+      type="button"
+      class="inline-flex items-baseline px-5 py-2.5 text-sm font-medium text-center text-gray-900 hover:text-white rounded-lg border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+    >
+      <FontAwesomeIcon
+        icon="fa-cart-shopping"
+        class="w-5 h-5 mr-2"
+      />
+      <span class="text-xs lea1ing-6">税込</span>
+      <span class="text-lg ml-1">{{ numFormat(totalAmount) }}</span>
+      <span class="text-xs ml-1">円</span>
+      <span
+        class="inline-flex items-center justify-center w-6 h-6 ml-2 text-base font-semibold text-white bg-red-600 rounded-full"
+      >
+        {{ totalQuantity }}
+      </span>
+    </button>
+  </div>
   <ul class="flex flex-wrap custom-flex-container">
     <li
       v-for="item in items"
       :key="item.itemId"
-      class="list-cell w-12 h-12"
+      class="list-cell"
     >
       <ItemListItem
         :item-id="item.itemId"

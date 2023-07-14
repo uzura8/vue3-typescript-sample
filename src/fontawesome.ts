@@ -19,6 +19,7 @@ import {
   faHeart,
   faUser,
   faPeopleGroup,
+  faCartShopping,
   faCircleInfo
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons'
@@ -45,6 +46,7 @@ library.add(
   faTrash,
   faUser,
   faPeopleGroup,
+  faCartShopping,
   faCircleInfo
 )
 
