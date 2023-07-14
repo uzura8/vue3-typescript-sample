@@ -2,6 +2,7 @@
 import type { PropType } from 'vue'
 import { defineComponent, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { capitalize } from '@/utils/str'
 
 export default defineComponent({
   props: {
@@ -23,13 +24,17 @@ export default defineComponent({
     },
     optionsLabelTransKey: {
       type: String,
-      required: true
+      required: false
     },
     isWidthFull: {
       type: Boolean,
       default: true
     },
     isRequired: {
+      type: Boolean,
+      default: false
+    },
+    isInline: {
       type: Boolean,
       default: false
     },
@@ -54,7 +59,10 @@ export default defineComponent({
     })
 
     const optionText = (key: string) => {
-      return t(`${props.optionsLabelTransKey}.${key}`)
+      if (props.optionsLabelTransKey) {
+        return t(`${props.optionsLabelTransKey}.${key}`)
+      }
+      return capitalize(key)
     }
 
     return {
@@ -66,11 +74,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
+  <div :class="{ 'flex items-center space-x-4': isInline }">
     <label
       v-if="labelText"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      :class="{ 'text-red-700': errorText, 'dark:text-red-500': errorText }"
+      class="mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      :class="{
+        'text-red-700': errorText,
+        'dark:text-red-500': errorText,
+        block: !isInline
+      }"
     >
       <span>{{ labelText }}</span>
       <span

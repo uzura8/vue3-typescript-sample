@@ -16,12 +16,13 @@ import {
   faRightToBracket,
   faFlag,
   faTrash,
+  faHeart,
   faUser,
   faPeopleGroup,
   faCircleInfo
 } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-//import { faCircle as farFaCircle } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
   faBars,
@@ -39,6 +40,8 @@ library.add(
   faGear,
   faRightToBracket,
   faFlag,
+  faHeart,
+  farHeart,
   faTrash,
   faUser,
   faPeopleGroup,
