@@ -27,7 +27,7 @@ export default defineComponent({
     },
     modelValue: {
       type: Number as PropType<number | '' | null>,
-      default: ''
+      default: 0
     }
   },
 

@@ -29,7 +29,7 @@ export default defineComponent({
       default: false
     },
     textAreaRows: {
-      type: String,
+      type: Number,
       default: 3
     },
     modelValue: String

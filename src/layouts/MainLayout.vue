@@ -2,13 +2,13 @@
 import { defineComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGlobalLoaderStore } from '@/stores/globalLoader.js'
-import Loading from '@/components/molecules/Loading.vue'
+import LoadingSpinner from '@/components/molecules/LoadingSpinner.vue'
 import MainHeader from '@/components/organisms/MainHeader.vue'
 import MainFooter from '@/components/organisms/MainFooter.vue'
 
 export default defineComponent({
   components: {
-    Loading,
+    LoadingSpinner,
     MainHeader,
     MainFooter
   },
@@ -24,7 +24,7 @@ export default defineComponent({
 
 <template>
   <div v-cloak>
-    <Loading
+    <LoadingSpinner
       v-if="isGlobalLoading"
       :is-fullscreen="true"
     />
