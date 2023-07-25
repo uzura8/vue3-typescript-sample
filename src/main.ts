@@ -5,7 +5,6 @@ import App from './App.vue'
 import router from './router'
 import i18n from './i18n'
 import Vue3Sanitize from 'vue-3-sanitize'
-import Vue3TouchEvents from 'vue3-touch-events'
 
 import FontAwesomeIcon from './fontawesome'
 
@@ -21,7 +20,6 @@ app.use(Vue3Sanitize, {
     a: ['class', 'href', 'target', 'rel', 'title']
   }
 })
-app.use(Vue3TouchEvents)
 
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 

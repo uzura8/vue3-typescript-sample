@@ -133,7 +133,6 @@ export default defineComponent({
     :class="{ 'bg-red-200': isOnCart }"
     @click="handleClickEvent"
     @dblclick="handleDoubleClickEvent"
-    v-touch:longtap="handleDoubleClickEvent"
   >
     {{ itemId }}
   </div>
