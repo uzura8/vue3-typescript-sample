@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
-//import AdminLayout from '@/layouts/AdminLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -42,11 +42,27 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
-  //{
-  //  path: '/admin',
-  //  component: AdminLayout,
-  //  children: [],
-  //},
+  {
+    path: '/admin',
+    component: AdminLayout,
+    children: [
+      {
+        path: '/admin/signin',
+        name: 'AdminSignIn',
+        component: () => import('@/views/AdminSignInPage.vue')
+      },
+      {
+        path: '/admin/about',
+        name: 'AdminAboutPage',
+        component: () => import('@/views/AdminAboutPage.vue')
+      },
+      {
+        path: '/',
+        name: 'AdminTopPage',
+        component: () => import('@/views/AdminTopPage.vue')
+      }
+    ]
+  },
   {
     path: '/:catchAll(.*)*',
     component: () => import('@/views/NotFound.vue')
