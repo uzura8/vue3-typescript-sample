@@ -39,11 +39,6 @@ const routes: RouteRecordRaw[] = [
         path: '/posts/:slug',
         name: 'PostDetailPage',
         component: () => import('@/views/PostDetailPage.vue')
-      },
-      {
-        path: '/items',
-        name: 'ItemListPage',
-        component: () => import('@/views/ItemListPage.vue')
       }
     ]
   },

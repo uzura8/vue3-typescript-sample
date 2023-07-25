@@ -171,14 +171,6 @@ export default defineComponent({
             {{ $t('page.about') }}
           </RouterLink>
           <RouterLink
-            to="/items"
-            exact
-            :aria-current="current === '/items' ? 'page' : null"
-            class="font-medium text-gray-600"
-          >
-            カタログ
-          </RouterLink>
-          <RouterLink
             v-if="!isAuth"
             to="/sign-in"
             exact
