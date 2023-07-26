@@ -10,7 +10,7 @@ interface LoadingItem {
 export const useGlobalLoaderStore = defineStore('globalLoader', () => {
   // state
   const loadingItems = ref<LoadingItem[]>([])
-  const loadingTimerId = ref<number>(0)
+  const loadingTimerId = ref<any>(null)
 
   // getter
   const isLoading = computed(() => loadingItems.value.length > 0)

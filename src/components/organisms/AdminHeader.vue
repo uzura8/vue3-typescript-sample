@@ -1,12 +1,13 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { initFlowbite } from 'flowbite'
 import { useRoute, useRouter } from 'vue-router'
 import config from '@/configs/config.json'
-import { storeToRefs } from 'pinia'
+//import { storeToRefs } from 'pinia'
 import { useGlobalHeaderStore } from '@/stores/globalHeader'
 import { useGlobalLoaderStore } from '@/stores/globalLoader'
-import { FirebaseApi } from '@/apis'
-import { useUserStore } from '@/stores/user'
+import { AdminAuthApi } from '@/apis'
+import { useAdminUserStore } from '@/stores/adminUser'
 
 export default defineComponent({
   components: {},
@@ -20,16 +21,20 @@ export default defineComponent({
 
     const globalLoader = useGlobalLoaderStore()
 
-    const userStore = useUserStore()
-    const { isAuth } = storeToRefs(userStore)
+    const adminUser = useAdminUserStore()
+    const isAuth = computed((): boolean => adminUser.isAuthenticated)
+    const username = computed((): string => {
+      if (!adminUser.isAuthenticated) return ''
+      return adminUser.username ?? ''
+    })
 
     const signOut = async () => {
       try {
         globalLoader.updateLoading(true)
-        await FirebaseApi.signOut()
-        userStore.setUser(null)
+        await AdminAuthApi.signOut()
+        adminUser.setUser(null)
         globalLoader.updateLoading(false)
-        router.push('/sign-in')
+        router.push('/admin/signin')
       } catch (error) {
         console.error(error)
         globalLoader.updateLoading(false)
@@ -75,6 +80,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      initFlowbite()
       nextTick(() => {
         header.value = document.querySelector('#header')
       })
@@ -89,6 +95,7 @@ export default defineComponent({
       current,
       siteName,
       isAuth,
+      username,
       signOut,
       isMenuOpen,
       toggleHeaderMenuOpenStatus
@@ -104,7 +111,7 @@ export default defineComponent({
     <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <RouterLink
-          to="/"
+          to="/admin"
           class="flex items-center"
         >
           <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
@@ -112,6 +119,53 @@ export default defineComponent({
           </span>
         </RouterLink>
         <div class="flex items-center lg:order-2">
+          <div v-if="isAuth">
+            <button
+              type="button"
+              id="user-menu-button"
+              aria-expanded="false"
+              data-dropdown-toggle="user-dropdown"
+              data-dropdown-placement="bottom"
+              class="flex text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-md px-3 py-2.5 mr-2 mb-2 mt-2 leading-4 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            >
+              <FontAwesomeIcon
+                class="w-6 h-6 mr-2"
+                icon="circle-user"
+              />
+              <span class="pt-1">{{ username }}</span>
+            </button>
+            <!-- Dropdown menu -->
+            <div
+              class="hidden min-w-150 z-50 my-1 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+              id="user-dropdown"
+            >
+              <div class="px-4 py-3">
+                <span class="block text-sm text-gray-900 dark:text-white">{{ username }}</span>
+              </div>
+              <ul
+                class="py-2"
+                aria-labelledby="user-menu-button"
+              >
+                <li>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    {{ $t('page.settings') }}
+                  </a>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    @click="signOut"
+                  >
+                    {{ $t('common.signOut') }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
           <RouterLink
             v-if="!isAuth"
             to="/admin/signin"
@@ -148,7 +202,7 @@ export default defineComponent({
             <li>
               <RouterLink
                 to="/admin"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                class="block py-4 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 exact-active-class="bg-transparent text-primary-700"
               >
                 Top
@@ -157,7 +211,7 @@ export default defineComponent({
             <li>
               <RouterLink
                 to="/admin/about"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                class="block py-4 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 exact-active-class="bg-transparent text-primary-700"
               >
                 {{ $t('page.about') }}

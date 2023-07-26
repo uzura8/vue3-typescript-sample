@@ -29,7 +29,7 @@ export default defineComponent({
         await FirebaseApi.signOut()
         userStore.setUser(null)
         globalLoader.updateLoading(false)
-        router.push('/sign-in')
+        router.push('/signin')
       } catch (error) {
         console.error(error)
         globalLoader.updateLoading(false)
@@ -172,9 +172,9 @@ export default defineComponent({
           </RouterLink>
           <RouterLink
             v-if="!isAuth"
-            to="/sign-in"
+            to="/signin"
             exact
-            :aria-current="current === '/sign-in' ? 'page' : null"
+            :aria-current="current === '/signin' ? 'page' : null"
             class="font-medium text-gray-600"
           >
             {{ $t('common.signIn') }}

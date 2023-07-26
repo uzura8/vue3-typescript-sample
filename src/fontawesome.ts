@@ -1,6 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faBars,
+  faCircleUser,
   faXmark,
   faEye,
   faEdit,
@@ -26,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
   faBars,
+  faCircleUser,
   faXmark,
   faEye,
   faEdit,

@@ -1,7 +1,9 @@
 import type { RouterScrollBehavior } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { FirebaseApi } from '@/apis'
+import { AdminAuthApi, FirebaseApi } from '@/apis'
 import { useGlobalHeaderStore } from '@/stores/globalHeader'
+import { useGlobalLoaderStore } from '@/stores/globalLoader'
+import { useAdminUserStore } from '@/stores/adminUser'
 import { useUserStore } from '@/stores/user'
 import routes from './routes'
 
@@ -36,29 +38,54 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   const globalHeader = useGlobalHeaderStore()
   globalHeader.updateMenuOpenStatus(false)
+  const globalLoader = useGlobalLoaderStore()
 
-  const userStore = useUserStore()
-  let user = FirebaseApi.getCurrentUser()
-  if (!user) {
-    user = await FirebaseApi.onAuthStateChanged()
-  }
-  userStore.setUser(user)
-  if (user) {
-    const idToken = await user.getIdToken()
-    userStore.setIdToken(idToken)
-  }
+  const isAdminPath = to.path.startsWith('/admin')
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  let user = null
+  let authForcedRedirectPaths = []
 
-  const requiredAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const authForcedRedirectPaths = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password']
+  if (isAdminPath) {
+    // Admin User Auth
+    authForcedRedirectPaths = [
+      '/admin/signin',
+      '/admin/signup',
+      '/admin/forgot-password',
+      '/admin/reset-password'
+    ]
+    const adminUser = useAdminUserStore()
+    try {
+      globalLoader.updateLoading(true)
+      user = await AdminAuthApi.currentAuthenticatedUser()
+      globalLoader.updateLoading(false)
+    } catch (error) {
+      //console.error(error)
+      globalLoader.updateLoading(false)
+    }
+    adminUser.setUser(user)
+  } else {
+    // User Auth
+    authForcedRedirectPaths = ['/signin', '/signup', '/forgot-password', '/reset-password']
+    const userStore = useUserStore()
+    user = FirebaseApi.getCurrentUser()
+    if (!user) {
+      user = await FirebaseApi.onAuthStateChanged()
+    }
+    userStore.setUser(user)
+    if (user) {
+      const idToken = await user.getIdToken()
+      userStore.setIdToken(idToken)
+    }
+  }
 
   if (user) {
     if (authForcedRedirectPaths.includes(to.path)) {
-      next({ path: '/home' })
+      next({ path: isAdminPath ? '/admin' : '/home' })
       return
     }
   } else {
-    if (requiredAuth) {
-      next({ path: '/sign-in' })
+    if (requiresAuth) {
+      next({ path: isAdminPath ? '/admin/signin' : '/signin' })
       return
     }
   }

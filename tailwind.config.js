@@ -58,6 +58,12 @@ module.exports = {
         'Segoe UI Symbol',
         'Noto Color Emoji'
       ]
+    },
+    minWidth: {
+      100: '100px',
+      150: '150px',
+      200: '200px',
+      300: '300px'
     }
   },
   plugins: [require('flowbite/plugin')]

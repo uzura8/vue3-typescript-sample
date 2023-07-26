@@ -21,7 +21,7 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
-        path: '/sign-in',
+        path: '/signin',
         name: 'SignInPage',
         component: () => import('@/views/SignInPage.vue')
       },
@@ -54,12 +54,18 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/admin/about',
         name: 'AdminAboutPage',
-        component: () => import('@/views/AdminAboutPage.vue')
+        component: () => import('@/views/AdminAboutPage.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
-        path: '/',
+        path: '/admin',
         name: 'AdminTopPage',
-        component: () => import('@/views/AdminTopPage.vue')
+        component: () => import('@/views/AdminTopPage.vue'),
+        meta: {
+          requiresAuth: true
+        }
       }
     ]
   },
