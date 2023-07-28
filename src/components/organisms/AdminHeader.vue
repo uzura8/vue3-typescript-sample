@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { initFlowbite } from 'flowbite'
 import { useRoute, useRouter } from 'vue-router'
 import config from '@/configs/config.json'
 //import { storeToRefs } from 'pinia'
@@ -8,9 +7,12 @@ import { useGlobalHeaderStore } from '@/stores/globalHeader'
 import { useGlobalLoaderStore } from '@/stores/globalLoader'
 import { AdminAuthApi } from '@/apis'
 import { useAdminUserStore } from '@/stores/adminUser'
+import AdminHeaderUserDropdown from '@/components/molecules/AdminHeaderUserDropdown.vue'
 
 export default defineComponent({
-  components: {},
+  components: {
+    AdminHeaderUserDropdown
+  },
 
   setup() {
     const siteName = config.site.name
@@ -80,7 +82,6 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      initFlowbite()
       nextTick(() => {
         header.value = document.querySelector('#header')
       })
@@ -119,58 +120,15 @@ export default defineComponent({
           </span>
         </RouterLink>
         <div class="flex items-center lg:order-2">
-          <div v-if="isAuth">
-            <button
-              type="button"
-              id="user-menu-button"
-              aria-expanded="false"
-              data-dropdown-toggle="user-dropdown"
-              data-dropdown-placement="bottom"
-              class="flex text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-md px-3 py-2.5 mr-2 mb-2 mt-2 leading-4 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            >
-              <FontAwesomeIcon
-                class="w-6 h-6 mr-2"
-                icon="circle-user"
-              />
-              <span class="pt-1">{{ username }}</span>
-            </button>
-            <!-- Dropdown menu -->
-            <div
-              class="hidden min-w-150 z-50 my-1 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-              id="user-dropdown"
-            >
-              <div class="px-4 py-3">
-                <span class="block text-sm text-gray-900 dark:text-white">{{ username }}</span>
-              </div>
-              <ul
-                class="py-2"
-                aria-labelledby="user-menu-button"
-              >
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    {{ $t('page.settings') }}
-                  </a>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    @click="signOut"
-                  >
-                    {{ $t('common.signOut') }}
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <AdminHeaderUserDropdown
+            v-if="isAuth"
+            :username="username"
+            @sign-out="signOut"
+          />
           <RouterLink
-            v-if="!isAuth"
+            v-else
             to="/admin/signin"
             class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gvay-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-            exact-active-class="bg-gray-900 text-white border-gray-800 dark:bg-gray-600 dark:text-white"
           >
             {{ $t('common.signIn') }}
           </RouterLink>
