@@ -1,11 +1,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import BaseHeading from '@/components/atoms/BaseHeading.vue'
 
-export default defineComponent({})
+export default defineComponent({
+  components: {
+    BaseHeading
+  }
+})
 </script>
 
 <template>
-  <div>
-    <h1 class="">{{ $t('page.top') }}</h1>
+  <div class="main-container">
+    <BaseHeading>{{ $t('page.top') }}</BaseHeading>
   </div>
 </template>

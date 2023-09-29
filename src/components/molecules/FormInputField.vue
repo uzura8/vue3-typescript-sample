@@ -24,6 +24,14 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    helperText: {
+      type: String,
+      default: ''
+    },
+    helperTexts: {
+      type: Array,
+      default: []
+    },
     isRequired: {
       type: Boolean,
       default: false
@@ -85,7 +93,7 @@ export default defineComponent({
     <label
       v-if="labelText"
       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      :class="{ 'text-red-700': errorText, 'dark:text-red-500': errorText }"
+      :class="{ 'text-red-600': errorText, 'dark:text-red-500': errorText }"
     >
       <span>{{ labelText }}</span>
       <span
@@ -98,6 +106,7 @@ export default defineComponent({
     <textarea
       v-if="inputType === 'textarea'"
       v-model="inputValue"
+      :type="inputType"
       @blur="$emit('blur', inputValue)"
       :rows="textAreaRows"
       class="block p-2.5 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -122,5 +131,23 @@ export default defineComponent({
     >
       {{ errorText }}
     </p>
+    <p
+      v-if="helperText"
+      class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+    >
+      {{ helperText }}
+    </p>
+    <div
+      v-if="helperTexts"
+      class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+    >
+      <div
+        v-for="(helperText, index) in helperTexts"
+        :key="index"
+        :class="{ 'mt-2': index > 0 }"
+      >
+        {{ helperText }}
+      </div>
+    </div>
   </div>
 </template>

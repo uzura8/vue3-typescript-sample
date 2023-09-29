@@ -48,9 +48,7 @@ export default defineComponent({
     }
     const decrement = () => {
       const value = inputValue.value ? inputValue.value : 0
-      let emitValue = value - 1
-      if (emitValue < 0) emitValue = 0
-      context.emit('update:modelValue', emitValue)
+      context.emit('update:modelValue', value - 1)
     }
 
     const inputClassStr = computed(() => {
@@ -102,7 +100,7 @@ export default defineComponent({
       <button
         @click="decrement"
         type="button"
-        class="mr-2 bg-gray-50 border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <FontAwesomeIcon
           icon="minus"
@@ -119,7 +117,7 @@ export default defineComponent({
       <button
         @click="increment"
         type="button"
-        class="ml-2 bg-gray-50 border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <FontAwesomeIcon
           icon="plus"

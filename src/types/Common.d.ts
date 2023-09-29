@@ -6,9 +6,18 @@ export interface File {
   caption: string
 }
 
+export interface Labels {
+  [key: string]: string
+}
+
 export interface ApiParams {
   token?: string
   [key: string]: string | number | boolean
+}
+
+export interface SelectOption {
+  value: string
+  label: string
 }
 
 export type DateTimeFormat =

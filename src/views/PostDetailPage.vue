@@ -8,9 +8,11 @@ import { config } from '@/configs'
 import { hasKey } from '@/utils/obj'
 import { PostApi } from '@/apis'
 import PostBody from '@/components/atoms/PostBody.vue'
+import BaseHeading from '@/components/atoms/BaseHeading.vue'
 
 export default defineComponent({
   components: {
+    BaseHeading,
     PostBody
   },
 
@@ -58,7 +60,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="post">
+  <div v-if="post" class="main-container">"
     <div class="block">
       <RouterLink to="/posts/">
         <i class="fas fa-chevron-left"></i>
@@ -66,7 +68,8 @@ export default defineComponent({
       </RouterLink>
     </div>
 
-    <h1 class="text-4xl font-extrabold dark:text-white">{{ post.title }}</h1>
+    <BaseHeading>{{ post.title }}</BaseHeading>
+
     <div class="container mx-auto py-8">
       <PostBody
         v-if="post.bodyHtml"

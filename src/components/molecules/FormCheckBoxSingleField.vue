@@ -48,10 +48,10 @@ export default defineComponent({
     })
 
     const valueTextUnified = computed(() => {
-      let vals = []
-      if (props.isBlockClickable) vals.push('w-full py-4 cursor-pointer')
-      if (props.valueTextClass) vals.push(props.valueTextClass)
-      return vals.join(' ')
+      let vals = ''
+      if (props.isBlockClickable) vals += 'w-full py-4 cursor-pointer'
+      if (props.valueTextClass) vals += ' ' + props.valueTextClass
+      return vals
     })
 
     watch(

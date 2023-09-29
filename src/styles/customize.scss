@@ -1,0 +1,28 @@
+.main-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .main-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.Toastify__toast-container {
+  min-width: 480px;
+}
+
+.Toastify__toast-theme--colored {
+  &.Toastify__toast--success {
+    background-color: #34d399 !important;
+  }
+  &.Toastify__toast--error {
+    background-color: #f87171 !important;
+  }
+}

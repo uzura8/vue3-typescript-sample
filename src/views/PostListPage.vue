@@ -2,9 +2,11 @@
 import { defineComponent } from 'vue'
 import { config } from '@/configs'
 import PostList from '@/components/organisms/PostList.vue'
+import BaseHeading from '@/components/atoms/BaseHeading.vue'
 
 export default defineComponent({
   components: {
+    BaseHeading,
     PostList
   },
 
@@ -19,8 +21,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
-    <h1 class="text-4xl font-extrabold dark:text-white">{{ $t('term.postList') }}</h1>
+  <div class="main-container">
+    <BaseHeading>{{ $t('term.postList') }}</BaseHeading>
     <div class="container mx-auto py-8">
       <PostList :service-id="serviceId" />
     </div>

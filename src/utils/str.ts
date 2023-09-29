@@ -1,3 +1,9 @@
+const numFormat = function (num) {
+  num = parseInt(num)
+  if (isNaN(num)) return 0
+  return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')
+}
+
 export function substr(text: string, len: number, truncation = ''): string {
   const textArray = text.split('')
   let count = 0
@@ -17,6 +23,49 @@ export function substr(text: string, len: number, truncation = ''): string {
   return text
 }
 
+export function isNumeric(str: string) {
+  if (typeof str != 'string') return false
+  return !isNaN(Number(str)) && !isNaN(parseFloat(str))
+}
+
+export function trimSpaces(str: string): string {
+  return str.replace(/(^\s+)|(\s+$)/g, '')
+}
+
+export function bytesFormat(num: number): string {
+  let formatted
+  let unit = 'B'
+  let count = 0
+
+  // num = parseInt(num)
+  if (isNaN(num)) return `0 ${unit}`
+
+  if (num < 1024) {
+    formatted = numFormat(num)
+    return `${formatted} ${unit}`
+  } else if (num < 1024 ** 2) {
+    count = 1
+    unit = 'KB'
+  } else if (num < 1024 ** 3) {
+    count = 2
+    unit = 'MB'
+  } else if (num < 1024 ** 4) {
+    count = 3
+    unit = 'GB'
+  } else {
+    formatted = numFormat(num)
+    return `${formatted} ${unit}`
+  }
+
+  formatted = num
+  for (let i = 0; i < count; i++) {
+    formatted = formatted / 1024
+  }
+  formatted = Math.floor(formatted * 100) / 100
+
+  return `${formatted}${unit}`
+}
+
 export function checkEmail(text: string): boolean {
   // eslint-disable-next-line no-useless-escape
   const regexp =
@@ -24,6 +73,10 @@ export function checkEmail(text: string): boolean {
   return regexp.test(text)
 }
 
+export function checkUsername(text: string): boolean {
+  const regexp = /^[0-9a-zA-Z_]{2,15}$/
+  return regexp.test(text)
+}
 export function nl2br(str: string): string {
   if (str == null) return ''
   str = str.replace(/\r\n/g, '<br />')
@@ -58,14 +111,4 @@ export function randStr(length: number): string {
     result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
-}
-
-export function capitalize(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
-export function numFormat(num: number | string): string {
-  if (typeof num === 'string') num = parseFloat(num)
-  if (isNaN(num)) return ''
-  return num.toLocaleString()
 }

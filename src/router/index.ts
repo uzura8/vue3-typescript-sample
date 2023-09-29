@@ -1,8 +1,9 @@
 import type { RouterScrollBehavior } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { FirebaseApi } from '@/apis'
+import { useGlobalLoaderStore } from '@/stores/globalLoader.js'
 import { useGlobalHeaderStore } from '@/stores/globalHeader'
-import { useUserStore } from '@/stores/user'
+import { useMemberStore } from '@/stores/member'
+import { FirebaseApi } from '@/apis'
 import routes from './routes'
 
 const scrollBehavior: RouterScrollBehavior = (to, _from, savedPosition) => {
@@ -34,31 +35,40 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, _from, next) => {
+  const globalLoader = useGlobalLoaderStore()
   const globalHeader = useGlobalHeaderStore()
   globalHeader.updateMenuOpenStatus(false)
+  globalHeader.updateMemberDropdownStatus(false)
 
-  const userStore = useUserStore()
-  let user = FirebaseApi.getCurrentUser()
-  if (!user) {
-    user = await FirebaseApi.onAuthStateChanged()
+  const memberStore = useMemberStore()
+  let fuser = FirebaseApi.getCurrentUser()
+  if (!fuser) {
+    try {
+      globalLoader.updateLoading(true)
+      fuser = await FirebaseApi.onAuthStateChanged()
+      memberStore.setMember(fuser)
+      globalLoader.updateLoading(false)
+    } catch (error) {
+      console.error(error)
+      globalLoader.updateLoading(false)
+    }
   }
-  userStore.setUser(user)
-  if (user) {
-    const idToken = await user.getIdToken()
-    userStore.setIdToken(idToken)
+  if (fuser) {
+    const idToken = await fuser.getIdToken()
+    memberStore.setIdToken(idToken)
   }
 
   const requiredAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const authForcedRedirectPaths = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password']
+  const authForcedRedirectPaths = ['/signin', '/signup', '/reset-password']
 
-  if (user) {
+  if (fuser) {
     if (authForcedRedirectPaths.includes(to.path)) {
       next({ path: '/home' })
       return
     }
   } else {
     if (requiredAuth) {
-      next({ path: '/sign-in' })
+      next({ path: '/signin' })
       return
     }
   }
